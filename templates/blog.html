@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Entries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .blog-entry {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blog Entries</h1>
+
+    {% if blogs %}
+        {% for blog in blogs %}
+            <div class="blog-entry">
+                <h2>{{ blog.title }}</h2>
+                <p><em>{{ blog.date.strftime('%Y-%m-%d %H:%M:%S') }}</em></p>
+                <p>{{ blog.content }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No blog entries available.</p>
+    {% endif %}
+</body>
+</html>

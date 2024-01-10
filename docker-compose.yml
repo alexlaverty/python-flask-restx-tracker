@@ -1,0 +1,37 @@
+services:
+  adminer:
+    depends_on:
+      - postgres
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres
+    image: adminer:latest
+    ports:
+      - '8080:8080'
+  postgres:
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    image: postgres:13
+  redis:
+    image: redis:alpine
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python","app.py"]
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/db
+      FLASK_DEBUG: 1
+      FLASK_ENV: development
+      PYTHONUNBUFFERED: 1
+      TZ: "Australia/Sydney"
+    ports:
+      - '5000:5000'
+    restart: always
+    volumes:
+      - .:/app
+version: '3'
