@@ -8,6 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Blueprint
 import os
 import logging
+from models import db, Exercise, BodyMeasurement, Weight, Sleep, Heart, Blog
+
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)s - %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.DEBUG)
 
@@ -23,7 +25,8 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Initialize the database
-    db = SQLAlchemy(app)
+    #db = SQLAlchemy(app)
+    db.init_app(app)
 
     # Create a Blueprint
     api_bp = Blueprint('api', __name__)
@@ -73,46 +76,6 @@ def create_app():
         'title': fields.String(required=True, description='Blog title'),
         'content': fields.String(required=True, description='Blog content')
     })
-
-    # Define the database models for different endpoints
-    class Exercise(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.DateTime, nullable=False)
-        exercise = db.Column(db.String(100), nullable=False)
-        sets = db.Column(db.Integer, nullable=False)
-        reps = db.Column(db.Integer, nullable=False)
-
-    # Define the database model for Body Measurements
-    class BodyMeasurement(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.DateTime, nullable=False)
-        biceps = db.Column(db.Float)
-        waist = db.Column(db.Float)
-        shoulders = db.Column(db.Float)
-        chest = db.Column(db.Float)
-        calves = db.Column(db.Float)
-
-    class Weight(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.DateTime, nullable=False)
-        weight = db.Column(db.Float, nullable=False)
-
-    class Sleep(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.DateTime, nullable=False)
-        hours = db.Column(db.Float, nullable=False)
-
-    class Heart(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.DateTime, nullable=False)
-        rate = db.Column(db.Integer, nullable=False)
-
-    class Blog(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        date = db.Column(db.DateTime, nullable=False)
-        title = db.Column(db.String(100), nullable=False)
-        content = db.Column(db.Text, nullable=False)
-
 
 
     # Use app.app_context() to create an application context
@@ -275,4 +238,4 @@ def create_app():
         blogs = Blog.query.all()
         return render_template('blog.html', blogs=blogs)
 
-    return app, db, api_bp
+    return app, api_bp

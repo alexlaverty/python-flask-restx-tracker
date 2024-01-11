@@ -1,9 +1,10 @@
 # app.py
 
 from routes import create_app
+from models import db  # Import the db object
 
 # Call create_app() to set up the Flask app, database, and API blueprint
-app, db, api_bp = create_app()
+app, api_bp = create_app()  # Pass the db object to create_app()
 
 # Register the API blueprint with the Flask app
 app.register_blueprint(api_bp)
